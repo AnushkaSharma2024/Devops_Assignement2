@@ -1,23 +1,22 @@
-name: Docker Image Build and Push
+name: Docker Image Build & Push
 
-on:
+on: 
   push:
     branches:
-      - main  # Adjust if needed
+      - main  # Runs when pushing to 'main' branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use Ubuntu as the runner
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKERTOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest .
-
-      - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
